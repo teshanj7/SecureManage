@@ -16,7 +16,7 @@ const studentSchema = new Schema({
     },
     Password: {
         type: String,
-        required: true
+        required: false
     }
 })
 

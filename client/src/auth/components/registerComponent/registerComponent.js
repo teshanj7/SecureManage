@@ -1,44 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import illustrationIntro from '../../../images/signup2.png';
+import google_signup from '../registerComponent/google.png'; // Make sure the path is correct
+import { toast } from 'react-toastify';
 import useAuth from '../../config/hooks/authContext';
 
 const RegisterComponent = () => {
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const success = queryParams.get('success');
+        const message = queryParams.get('message');
+    
+        if (success === 'false' && message) {
+          toast.error(message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+    }, []);
 
     const { studentSignup, instructorSignup } = useAuth();
-    const [Fullname, setFullname] = useState("");
-    const [Instructorname, setInstructorname] = useState("");
-    const [Email, setEmail] = useState("");
-    const [Password, setPassword] = useState("");
+    const [fullname, setFullname] = useState("");
+    const [instructorName, setInstructorName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [activeTab, setActiveTab] = useState('Studentregister');
+    const [loading, setLoading] = useState(false); // Loading state
 
-    const handleTabChange = (tab) => {
-        setActiveTab(tab);
-    };
+    const handleTabChange = (tab) => setActiveTab(tab);
 
-    const handleStudentRegister = async (e) => {
+    const handleSubmit = async (e, type) => {
         e.preventDefault();
+        setLoading(true); // Show loading spinner
 
-        if (Password !== confirmPassword) {
+        if (password !== confirmPassword) {
             setError("Passwords do not match");
+            setLoading(false); // Stop loading on error
             return;
         }
 
-        await studentSignup(Fullname, Email, Password);
-      
+        try {
+            if (type === 'student') {
+                await studentSignup(fullname, email, password);
+            } else {
+                await instructorSignup(instructorName, email, password);
+            }
+            toast.success('Account created successfully');
+        } catch (err) {
+            toast.error('Error creating account');
+        } finally {
+            setLoading(false); // Stop loading when done
+        }
     };
 
-    const handleInstructorRegister = async (e) => {
-        e.preventDefault();
-
-        if (Password !== confirmPassword) {
-            setError("Passwords do not match");
-            return;
-        }
-
-        await instructorSignup(Instructorname, Email, Password);
-    }
+    const googleAuth = () => {
+        window.open(`${process.env.REACT_APP_BACKEND_URL}/google-auth/google/callback`, "_self");
+    };
 
     return (
         <div className='flex flex-col md:flex-row'>
@@ -71,8 +95,9 @@ const RegisterComponent = () => {
                                         Instructor Signup
                                     </button>
                                 </div>
+
                                 {activeTab === 'Studentregister' && (
-                                    <form className="space-y-2 md:space-y-4" onSubmit={handleStudentRegister}>
+                                    <form className="space-y-2 md:space-y-4" onSubmit={(e) => handleSubmit(e, 'student')}>
                                         <div>
                                             <label htmlFor="fullname" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Fullname</label>
                                             <input type="text" name="fullname" id="fullname" onChange={(e) => setFullname(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="W A Sahan Gamage" required />
@@ -104,11 +129,12 @@ const RegisterComponent = () => {
                                         </p>
                                     </form>
                                 )}
+
                                 {activeTab === 'Instructorregister' && (
-                                    <form className="space-y-2 md:space-y-4" onSubmit={handleInstructorRegister}>
+                                    <form className="space-y-2 md:space-y-4" onSubmit={(e) => handleSubmit(e, 'instructor')}>
                                         <div>
                                             <label htmlFor="instructorname" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instructor Fullname</label>
-                                            <input type="text" name="instructorname" id="instructorname" onChange={(e) => setInstructorname(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="W A Sahan Gamage" required />
+                                            <input type="text" name="instructorname" id="instructorname" onChange={(e) => setInstructorName(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="W A Sahan Gamage" required />
                                         </div>
                                         <div>
                                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instructor Email</label>
@@ -137,13 +163,19 @@ const RegisterComponent = () => {
                                         </p>
                                     </form>
                                 )}
+
+                                <br />
+                                <button className="SignUpWithGoogleBtn" onClick={googleAuth}>
+                                    <img src={google_signup} alt="google icon" className="googleLogo" />
+                                    <span>Sign up with Google</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default RegisterComponent;

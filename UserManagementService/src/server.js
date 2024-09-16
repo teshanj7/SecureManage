@@ -5,6 +5,36 @@ require("dotenv").config();
 const connectToDatabase = require('./config/database');
 const { authenticate } = require("./middleware/authMiddleware");
 
+const passport = require("passport");
+//const cookieSession = require("cookie-session");
+const session = require('express-session');
+const passportStrategy = require("./passport");
+const cors = require("cors");
+
+
+// app.use(
+// 	cors({
+// 		origin: "http://localhost:3000",
+// 		methods: "GET,POST,PUT,DELETE",
+// 		credentials: true,
+// 	})
+// );
+
+
+app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: false } // Set `true` for HTTPS
+    })
+  );
+  
+  // Initialize Passport and session handling
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+
 //Initializing the port number
 const PORT = process.env.PORT || 3001;
 
@@ -37,3 +67,10 @@ app.use('/instructor', authenticate, instructorRouter);
 // role based authenticate
 const authenticateRole = require('./routes/authenticateRole');
 app.use('/authenticate-role', authenticateRole);
+
+// auth routes
+const googleauthRouter = require('./routes/googleRoutes');
+app.use('/google-auth',googleauthRouter);
+
+
+

@@ -144,9 +144,30 @@ const loginUser = async (req, res) => {
   }
 };
 
+
+const googleLoginUser = async (req, res) => {
+  try {
+    const { Email, Password } = req.body;
+    let user;
+    let loginmessage;
+    let type;
+  
+    console.log("hello");
+    if (passwordMatch) { 
+      const token = jwt.sign({ email: user.Email, type: user.Type }, "Your_Secret_Token", { expiresIn: '1h' });
+      return res.status(200).json({ message: loginmessage, token, user, type });
+    } else {
+      return res.status(401).json({ error: "Password incorrect" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
     adminRegister,
     registerStudent,
     registerInstructor,
-    loginUser
+    loginUser,
+    googleLoginUser
 };
