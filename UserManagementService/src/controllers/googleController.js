@@ -9,22 +9,22 @@ exports.googleLogin = passport.authenticate("google", { scope: ["profile", "emai
 exports.googleCallback = (req, res, next) => {
     passport.authenticate("google", async (err, user, info) => {
       if (err || !user) {
-        // Redirect to failure URL if authentication failed or no user found
         return res.redirect(`${process.env.CLIENT_URL_FAIL}?success=false&message=Sign in failure`);
       }
   
       try {
-        // Successfully authenticated, generate JWT token
-        const token = jwt.sign({ email: user.Email, type: user.Type }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Create a JWT token or session
+        const token = jwt.sign({ _id: user._id, Email: user.Email, Fullname: user.Fullname, Type: user.Type }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
-        // Redirect to client with token in the URL (hard-coded for testing)
-        return res.redirect(`http://localhost:3000/google-login?token=${token}&success=true`);
+        // Redirect to your React frontend with the token
+        return res.redirect(`${process.env.CLIENT_URL}?token=${token}`);
       } catch (error) {
         console.error(error);
         return res.redirect(`${process.env.CLIENT_URL_FAIL}?success=false&message=Token generation failure`);
       }
-    })(req, res, next);  // Properly pass req, res, and next
+    })(req, res, next);
   };
+  
 
 // Login success response
 exports.loginSuccess = (req, res) => {

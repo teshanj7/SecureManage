@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { adminRegister, registerStudent, registerInstructor, loginUser, googleLoginUser} = require('../controllers/authController');
+const { adminRegister, registerStudent, registerInstructor, loginUser,  validateToken} = require('../controllers/authController');
 
 // Admin create account
 router.post('/createAdmin', adminRegister);
@@ -16,7 +16,9 @@ router.post('/registerInstructor',registerInstructor);
 router.post('/login',loginUser);
 
 // Google a user
-router.post('/googleLogin',googleLoginUser);
+// router.post('/googleLogin',googleLoginUser);
+
+router.post('/validate-token', validateToken);
 
 
 module.exports = router;

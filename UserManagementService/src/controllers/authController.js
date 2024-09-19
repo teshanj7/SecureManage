@@ -134,7 +134,7 @@ const loginUser = async (req, res) => {
     const passwordMatch = await bcrypt.compare(Password, user.Password);
   
     if (passwordMatch) { 
-      const token = jwt.sign({ email: user.Email, type: user.Type }, "Your_Secret_Token", { expiresIn: '1h' });
+      const token = jwt.sign({ email: user.Email, type: user.Type }, process.env.JWT_SECRET, { expiresIn: '1h' });
       return res.status(200).json({ message: loginmessage, token, user, type });
     } else {
       return res.status(401).json({ error: "Password incorrect" });
@@ -145,29 +145,66 @@ const loginUser = async (req, res) => {
 };
 
 
-const googleLoginUser = async (req, res) => {
-  try {
-    const { Email, Password } = req.body;
-    let user;
-    let loginmessage;
-    let type;
+// const googleLoginUser = async (req, res) => {
+//   const { token } = req.body;
+
+//   if (!token) {
+//     return res.status(400).json({ message: 'Token is required' });
+//   }
+
+//   // Replace 'your-secret-key' with your actual secret key
+//   jwt.verify(token, 'your-secret-key', (err, decoded) => {
+//     if (err) {
+//       return res.status(401).json({ message: 'Invalid token' });
+//     }
+
+//     // Here, you would typically fetch user details from your database
+//     // For demonstration, we'll just return the decoded token data
+//     res.status(200).json({
+//       user: {
+//         email: decoded.email,  
+//         name: decoded.name     
+//       },
+//       token
+//     });
+//   });
+// };
+
+// Validate token controller function
+const validateToken = (req, res) => {
+   const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ message: 'Token is required' });
+  }
+
   
-    console.log("hello");
-    if (passwordMatch) { 
-      const token = jwt.sign({ email: user.Email, type: user.Type }, "Your_Secret_Token", { expiresIn: '1h' });
-      return res.status(200).json({ message: loginmessage, token, user, type });
-    } else {
-      return res.status(401).json({ error: "Password incorrect" });
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Invalid token' });
     }
-  } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+
+    // Here, you would typically fetch user details from your database
+    // For demonstration, we'll just return the decoded token data
+    res.status(200).json({
+      user: {
+        Email: decoded.Email,  
+        Fullname: decoded.Fullname,
+        Type:decoded.Type, 
+        _id: decoded._id
+      },
+      token
+    });
+  });
+  
+  
+}
 
 module.exports = {
     adminRegister,
     registerStudent,
     registerInstructor,
     loginUser,
-    googleLoginUser
+    // googleLoginUser,
+    validateToken
 };
