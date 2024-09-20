@@ -33,15 +33,7 @@ const adminRegister = async (req, res) => {
         });
   
         await admin.save();
-
-        // Format the timestamps (if they exist)
-        const formattedAdmin = {
-          ...admin.toObject(),
-          createdAt: admin.createdAt ? admin.createdAt.toISOString() : null,
-          updatedAt: admin.updatedAt ? admin.updatedAt.toISOString() : null
-        };
-
-        res.json({ message: 'Admin registration successful', token, admin: formattedAdmin});
+        res.json({ message: 'Admin registration successful', token});
       }else{
         res.json({ message: 'This email is already exists'});
       }
@@ -70,15 +62,7 @@ const registerStudent =  async (req, res) => {
         });
   
         await student.save();
-
-        // Format the timestamps
-        const formattedStudent = {
-          ...student.toObject(),
-          createdAt: student.createdAt ? student.createdAt.toISOString() : null,
-          updatedAt: student.updatedAt ? student.updatedAt.toISOString() : null
-        };
-
-        res.json({ message: 'Student registration successful', token, student: formattedStudent });
+        res.json({ message: 'Student registration successful', token});
       }else{
         res.json({ message: 'This email is already exists'});
       }
@@ -107,15 +91,7 @@ const registerInstructor =  async (req, res) => {
         });
   
         await instructor.save();
-      
-        // Format the timestamps
-        const formattedInstructor = {
-          ...instructor.toObject(),
-          createdAt: instructor.createdAt ? instructor.createdAt.toISOString() : null,
-          updatedAt: instructor.updatedAt ? instructor.updatedAt.toISOString() : null
-        };
-
-        res.json({ message: 'Instructor registration successful', token, instructor: formattedInstructor});
+        res.json({ message: 'Instructor registration successful', token});
       }else{
         res.json({ message: 'This email is already exists'});
       }
@@ -159,15 +135,7 @@ const loginUser = async (req, res) => {
   
     if (passwordMatch) { 
       const token = jwt.sign({ email: user.Email, type: user.Type }, "Your_Secret_Token", { expiresIn: '1h' });
-
-      // Format the timestamps for the user object
-      const formattedUser = {
-        ...user.toObject(),
-        createdAt: user.createdAt ? user.createdAt.toISOString() : null,
-        updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null
-      };
-
-      return res.status(200).json({ message: loginmessage, token, user: formattedUser, type });
+      return res.status(200).json({ message: loginmessage, token, user, type });
     } else {
       return res.status(401).json({ error: "Password incorrect" });
     }

@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const cors = require('cors');
 require("dotenv").config();
 const connectToDatabase = require('./config/database');
 const { authenticate } = require("./middleware/authMiddleware");
@@ -12,6 +13,12 @@ const PORT = process.env.PORT || 3001;
 // Disable "X-Powered-By" header
 app.disable("X-Powered-By");
 
+// Cross-Domain Misconfiguration
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(bodyParser.json());
 app.use(express.json());
 
