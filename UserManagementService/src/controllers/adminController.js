@@ -6,7 +6,15 @@ const router = require("express").Router();
 const allAdmins = async (req, res) => {
     try {
         const admins = await Admin.find();
-        res.json(admins);
+
+        // Format the timestamps (if they exist) for each admin
+        const formattedAdmins = admins.map(admin => ({
+            ...admin.toObject(),
+            createdAt: admin.createdAt ? admin.createdAt.toISOString() : null,
+            updatedAt: admin.updatedAt ? admin.updatedAt.toISOString() : null
+        }));
+
+        res.json(formattedAdmins);
     } catch (error) {
         res.status(500).json({ status: "Error with fetching data", error: error.message });
     }
