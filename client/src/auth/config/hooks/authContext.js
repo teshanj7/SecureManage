@@ -61,28 +61,12 @@ const useAuth = () => {
         }
     }
 
-    const googleLogin = async (Email) => {
-        try {
-            const response = await axios.post('http://localhost:8800/UserManagementService/auth/googleLogin', {
-                Email
-            });
-            if (response.status === 200) {
-                alert("Login Successfully...!");
-                setUser(response.data.user);
-                setToken(response.data.token);
-                navigate('/home');
-            }
-        } catch (error) {
-            alert("Please Enter Valid Credentials..!");
-        }
-    };
-
     const logout = () => {
         localStorage.clear();
         window.location.href = '/';
     }
 
-    return { studentSignup, instructorSignup, login, googleLogin, logout };
+    return { studentSignup, instructorSignup, login, logout };
 }
 
 export default useAuth;

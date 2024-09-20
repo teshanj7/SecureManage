@@ -15,89 +15,89 @@ const checkEmailExists = async (email) => {
 
 // Create an admin account
 const adminRegister = async (req, res) => {
-    try {
-      const { Adminname, Email, Password } = req.body;
-      const existingEmail = await checkEmailExists(Email);
-  
-      if(!existingEmail){
-        const hashPassword = await bcrypt.hash(Password,10);
-  
-        const admin = new Admin({
-          Adminname,
-          Email,
-          Password: hashPassword,
-        });
-  
-        const token = jwt.sign({_id: admin._id}, 'secretkey123',{
-          expiresIn: '60d',
-        });
-  
-        await admin.save();
-        res.json({ message: 'Admin registration successful', token});
-      }else{
-        res.json({ message: 'This email is already exists'});
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Admin registration failed'});
+  try {
+    const { Adminname, Email, Password } = req.body;
+    const existingEmail = await checkEmailExists(Email);
+
+    if (!existingEmail) {
+      const hashPassword = await bcrypt.hash(Password, 10);
+
+      const admin = new Admin({
+        Adminname,
+        Email,
+        Password: hashPassword,
+      });
+
+      const token = jwt.sign({ _id: admin._id }, 'secretkey123', {
+        expiresIn: '60d',
+      });
+
+      await admin.save();
+      res.json({ message: 'Admin registration successful', token });
+    } else {
+      res.json({ message: 'This email is already exists' });
     }
+  } catch (error) {
+    res.status(500).json({ error: 'Admin registration failed' });
+  }
 }
 
 // Registering a new student
-const registerStudent =  async (req, res) => {
-    try {
-      const {Fullname, Email, Password } = req.body;
-      const existingEmail = await checkEmailExists(Email);
-  
-      if (!existingEmail){
-        const hashPassword = await bcrypt.hash(Password,10);
-  
-        const student = new Student({
-          Fullname,
-          Email,
-          Password: hashPassword,
-        });
-  
-        const token = jwt.sign({_id: student._id}, 'secretkey123',{
-          expiresIn: '60d',
-        });
-  
-        await student.save();
-        res.json({ message: 'Student registration successful', token});
-      }else{
-        res.json({ message: 'This email is already exists'});
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Student registration failed'});
+const registerStudent = async (req, res) => {
+  try {
+    const { Fullname, Email, Password } = req.body;
+    const existingEmail = await checkEmailExists(Email);
+
+    if (!existingEmail) {
+      const hashPassword = await bcrypt.hash(Password, 10);
+
+      const student = new Student({
+        Fullname,
+        Email,
+        Password: hashPassword,
+      });
+
+      const token = jwt.sign({ _id: student._id }, 'secretkey123', {
+        expiresIn: '60d',
+      });
+
+      await student.save();
+      res.json({ message: 'Student registration successful', token });
+    } else {
+      res.json({ message: 'This email is already exists' });
     }
+  } catch (error) {
+    res.status(500).json({ error: 'Student registration failed' });
+  }
 }
 
 // Registering a new instructor
-const registerInstructor =  async (req, res) => {
-    try {
-      const {Instructorname, Email, Password } = req.body;
-      const existingEmail = await checkEmailExists(Email);
-  
-      if (!existingEmail){
-        const hashPassword = await bcrypt.hash(Password,10);
-  
-        const instructor = new Instructor({
-          Instructorname,
-          Email,
-          Password: hashPassword,
-        });
-  
-        const token = jwt.sign({_id: instructor._id}, 'secretkey123',{
-          expiresIn: '60d',
-        });
-  
-        await instructor.save();
-        res.json({ message: 'Instructor registration successful', token});
-      }else{
-        res.json({ message: 'This email is already exists'});
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Instructor registration failed'});
+const registerInstructor = async (req, res) => {
+  try {
+    const { Instructorname, Email, Password } = req.body;
+    const existingEmail = await checkEmailExists(Email);
+
+    if (!existingEmail) {
+      const hashPassword = await bcrypt.hash(Password, 10);
+
+      const instructor = new Instructor({
+        Instructorname,
+        Email,
+        Password: hashPassword,
+      });
+
+      const token = jwt.sign({ _id: instructor._id }, 'secretkey123', {
+        expiresIn: '60d',
+      });
+
+      await instructor.save();
+      res.json({ message: 'Instructor registration successful', token });
+    } else {
+      res.json({ message: 'This email is already exists' });
     }
+  } catch (error) {
+    res.status(500).json({ error: 'Instructor registration failed' });
+  }
 }
 
 // Login Part base on the Type
@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
     let user;
     let loginmessage;
     let type;
-    
+
     const admin = await Admin.findOne({ Email });
     if (admin) {
       user = admin;
@@ -130,10 +130,10 @@ const loginUser = async (req, res) => {
         }
       }
     }
-  
+
     const passwordMatch = await bcrypt.compare(Password, user.Password);
-  
-    if (passwordMatch) { 
+
+    if (passwordMatch) {
       const token = jwt.sign({ email: user.Email, type: user.Type }, process.env.JWT_SECRET, { expiresIn: '1h' });
       return res.status(200).json({ message: loginmessage, token, user, type });
     } else {
@@ -144,67 +144,36 @@ const loginUser = async (req, res) => {
   }
 };
 
-
-// const googleLoginUser = async (req, res) => {
-//   const { token } = req.body;
-
-//   if (!token) {
-//     return res.status(400).json({ message: 'Token is required' });
-//   }
-
-//   // Replace 'your-secret-key' with your actual secret key
-//   jwt.verify(token, 'your-secret-key', (err, decoded) => {
-//     if (err) {
-//       return res.status(401).json({ message: 'Invalid token' });
-//     }
-
-//     // Here, you would typically fetch user details from your database
-//     // For demonstration, we'll just return the decoded token data
-//     res.status(200).json({
-//       user: {
-//         email: decoded.email,  
-//         name: decoded.name     
-//       },
-//       token
-//     });
-//   });
-// };
-
 // Validate token controller function
 const validateToken = (req, res) => {
-   const { token } = req.body;
+  const { token } = req.body;
 
   if (!token) {
     return res.status(400).json({ message: 'Token is required' });
   }
 
-  
+
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
 
-    // Here, you would typically fetch user details from your database
-    // For demonstration, we'll just return the decoded token data
     res.status(200).json({
       user: {
-        Email: decoded.Email,  
+        Email: decoded.Email,
         Fullname: decoded.Fullname,
-        Type:decoded.Type, 
+        Type: decoded.Type,
         _id: decoded._id
       },
       token
     });
   });
-  
-  
 }
 
 module.exports = {
-    adminRegister,
-    registerStudent,
-    registerInstructor,
-    loginUser,
-    // googleLoginUser,
-    validateToken
+  adminRegister,
+  registerStudent,
+  registerInstructor,
+  loginUser,
+  validateToken
 };

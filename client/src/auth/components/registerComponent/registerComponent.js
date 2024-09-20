@@ -123,10 +123,24 @@ const RegisterComponent = () => {
                                                 <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">I accept the <a className="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Terms and Conditions</a></label>
                                             </div>
                                         </div>
+                                        
                                         <button type="submit" className="w-full text-white bg-orange-500 hover:bg-gray-300 hover:text-black focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
                                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                             Already have an account? <a href="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
                                         </p>
+
+                                        {/* Google Signup Button */}
+                                        <div className="flex justify-center mt-4">
+                                            <button
+                                                type="button"
+                                                onClick={googleAuth}
+                                                className="w-full flex items-center justify-center  text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 text-sm px-5 py-2.5"
+                                            >
+                                                <img src={google_signup} alt="Google Icon" className="w-5 h-5 mr-2" />
+                                                Signup with Google
+                                            </button>
+                                        </div>
+
                                     </form>
                                 )}
 
@@ -165,10 +179,6 @@ const RegisterComponent = () => {
                                 )}
 
                                 <br />
-                                <button className="SignUpWithGoogleBtn" onClick={googleAuth}>
-                                    <img src={google_signup} alt="google icon" className="googleLogo" />
-                                    <span>Sign up with Google</span>
-                                </button>
                             </div>
                         </div>
                     </div>

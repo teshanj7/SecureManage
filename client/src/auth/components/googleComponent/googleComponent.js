@@ -7,7 +7,7 @@ import useAuth from '../../config/hooks/authContext'; // Adjust the path if need
 const GoogleComponent = () => {
   const navigate = useNavigate();
   const { setToken, setUser } = useContext(UserContext);
-  const { Googlelogin } = useAuth(); // Corrected spelling of the function name
+  const { Googlelogin } = useAuth(); 
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -22,13 +22,13 @@ const GoogleComponent = () => {
           if (response.status === 200) {
             // Successful login
             alert("Login Successfully...!");
-            setUser(response.data.user); // Set user data
-            setToken(response.data.token); // Set token
-            navigate('/home'); // Redirect to home page
+            setUser(response.data.user); 
+            setToken(response.data.token); 
+            navigate('/home'); 
           } else {
             // Handle login failure
             alert("Login failed: " + response.data.message);
-            navigate('/login'); // Redirect to login page if needed
+            navigate('/login'); 
           }
         })
         .catch(error => {
