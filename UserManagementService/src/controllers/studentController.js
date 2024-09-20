@@ -6,15 +6,7 @@ const router = require("express").Router();
 const allStudents = async (req, res) => {
     try {
         const students = await Student.find();
-
-        // Format the timestamps before sending the response
-        const formattedStudents = students.map(student => ({
-            ...student.toObject(),
-            createdAt: student.createdAt ? student.createdAt.toISOString() : null,
-            updatedAt: student.updatedAt ? student.updatedAt.toISOString() : null
-        }));
-
-        res.json(formattedStudents);
+        res.json(students);
     } catch (error) {
         res.status(500).json({ status: "Error with fetching data", error: error.message });
     }
@@ -31,16 +23,9 @@ const updateStudent = async (req, res) => {
             Email,
             Password
         }
+
         await Student.findByIdAndUpdate(studentId, updateStudent);
-
-        const updatedStudent = await Student.findById(studentId);
-        const formattedStudent = {
-            ...updatedStudent.toObject(),
-            createdAt: updatedStudent.createdAt ? updatedStudent.createdAt.toISOString() : null,
-            updatedAt: updatedStudent.updatedAt ? updatedStudent.updatedAt.toISOString() : null
-        };
-
-        res.status(200).send({ status: "Student Updated", student: formattedStudent });
+        res.status(200).send({status: "Student Updated"});
     } catch (error){
         res.status(500).send({ status: "Error with updating data", error: error.message });
     }
@@ -64,14 +49,7 @@ const singleStudent = async (req, res) => {
         let studentId = req.params.id;
 
         const student = await Student.findById(studentId);
-
-        // Format the timestamps before sending the response
-        const formattedStudent = {
-            ...student.toObject(),
-            createdAt: student.createdAt ? student.createdAt.toISOString() : null,
-            updatedAt: student.updatedAt ? student.updatedAt.toISOString() : null
-        };
-        res.status(200).send({ status: "Student fetched", student: formattedStudent });
+        res.status(200).send({ status: "Student fetched", student });
     } catch (error) {
         res.status(500).send({ status: "Error with fetching student", error: error.message });
     }
@@ -87,14 +65,7 @@ const searchstudents = async (req, res) => {
                 },
             ],
         });
-
-        // Format the timestamps in the search results
-        const formattedResult = result.map(student => ({
-            ...student.toObject(),
-            createdAt: student.createdAt ? student.createdAt.toISOString() : null,
-            updatedAt: student.updatedAt ? student.updatedAt.toISOString() : null
-        }));
-        res.send(formattedResult);
+        res.send(result);
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
