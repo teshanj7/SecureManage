@@ -10,6 +10,7 @@ import Footer from './components/footerComponent/Footer';
 // Auth Components
 import RegisterComponent from './auth/components/registerComponent/registerComponent';
 import LoginComponent from './auth/components/loginComponent/loginComponent';
+import GoogleLoginComponent from './auth/components/googleComponent/googleComponent';
 
 // Instructor Components
 import CreateCoursePage from './pages/createCoursePage/createCoursePage';
@@ -69,6 +70,7 @@ function App() {
               <Route path='/home' element={<Home/>}/>
               <Route path='/register' element={<RegisterComponent/>}/>
               <Route path='/login' element={<LoginComponent/>}/>
+              <Route path='/google-login' element={<GoogleLoginComponent/>}/>
               <Route path='/profile/:id' element={<Profile/>}/>
               <Route path='/order-summary' element={<OrderSummaryPage/>}/>
               <Route path='/createCourse' element={<CreateCoursePage/>}/>

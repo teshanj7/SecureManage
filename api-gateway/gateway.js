@@ -4,7 +4,11 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
+const corsOption = {
+    origin: "*",
+}
+
+app.use(cors(corsOption));
 app.use(express.json());
 
 // Set up CORS
@@ -18,10 +22,10 @@ app.use((req, res, next) => {
 });
 
 // Proxy requests to different service
-app.use("/UserManagementService", proxy("http://user-management-service:3001"));
-app.use("/CourseManagementService", proxy("http://course-management-service:3002"));
-app.use("/PaymentManagementService", proxy("http://payment-management-service:3003"));
-app.use("/EnrollmentManagementService", proxy("http://enrollment-management-service:3004"));
+app.use("/UserManagementService", proxy("http://localhost:3001"));
+app.use("/CourseManagementService", proxy("http://localhost:3002"));
+app.use("/PaymentManagementService", proxy("http://localhost:3003"));
+app.use("/EnrollmentManagementService", proxy("http://localhost:3004"));
 
 // Start the API Gateway
 const PORT = process.env.PORT || 8800;
