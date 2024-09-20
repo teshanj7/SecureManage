@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import illustrationIntro from '../../../images/signup2.png';
 import useAuth from '../../config/hooks/authContext';
+import google_signup from '../registerComponent/google.png';
 
 const LoginComponent = () => {
 
@@ -16,6 +17,11 @@ const LoginComponent = () => {
         } catch (error) {
             setError("Invalid email or password");
         }
+    };
+
+    const googleAuth = () => {
+        window.open(`${process.env.REACT_APP_BACKEND_URL}/google-auth/google/callback`, "_self");
+        //get the return value by callback endpoint 
     };
 
     return (
@@ -46,6 +52,10 @@ const LoginComponent = () => {
                                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                         Don't have an account? <a href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up here</a>
                                     </p>
+                                    <button className="w-full flex items-center justify-center text-white bg-gray-100 hover:bg-gray-200 border border-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-500" onClick={googleAuth} type="button">
+                                        <img src={google_signup} alt="Google icon" className="w-5 h-5 mr-2" />
+                                        <span className="text-gray-900 dark:text-white">Sign in with Google</span>
+                                    </button>
                                 </form>
                             </div>
                         </div>

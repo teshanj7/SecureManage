@@ -12,6 +12,7 @@ const Profile = () => {
 
     const params = useParams();
     const userId = params.id;
+    console.log("userId", userId);
     const { user,setUser} = useContext(UserContext);
     const { studentData } = useFetchUserDetails(userId);
     const { instructorData } = useFetchInstructorDetails(userId);

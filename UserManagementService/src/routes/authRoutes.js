@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
 
-const { adminRegister, registerStudent, registerInstructor, loginUser} = require('../controllers/authController');
+const { adminRegister, registerStudent, registerInstructor, loginUser, validateToken } = require('../controllers/authController');
 
 // Configure csp headers
 router.use(helmet.contentSecurityPolicy({
@@ -25,13 +25,16 @@ router.use(helmet.xContentTypeOptions());
 router.post('/createAdmin', adminRegister);
 
 // Student registering
-router.post('/registerStudent',registerStudent);
+router.post('/registerStudent', registerStudent);
 
 // Instructor registering
-router.post('/registerInstructor',registerInstructor);
+router.post('/registerInstructor', registerInstructor);
 
 // Login a user
-router.post('/login',loginUser);
+router.post('/login', loginUser);
+
+//validate the google login token
+router.post('/validate-token', validateToken);
 
 
 module.exports = router;
