@@ -1,9 +1,17 @@
 let Course = require("../models/course");
 const authenticateRole = require("../middleware/authenticationRole");
 
-//create new course
+// Create new course
 const createCourse = async (req, res) => {
     const { UserId, CourseName, CourseCode, Description, Instructor, Price, Image, Duration, VideoLink } = req.body;
+
+    // Validations
+    if (Price <= 0 || typeof Price !== 'number') {
+        return res.status(400).json({ message: 'Price must be a positive number!' });
+    }
+    if (!CourseName || !CourseCode || !Description || !Instructor || !Price || !Image || !Duration || !VideoLink) {
+        return res.status(400).json({ message: 'All fields are required!' });
+    }
 
     const newCourse = new Course({
         UserId,
@@ -15,24 +23,18 @@ const createCourse = async (req, res) => {
         Image,
         Duration,
         VideoLink
-    })
-    //validations
-    if (Price <= 0 || !Price === 'number') {
-        return res.status(400).json({ message: 'Price must be a positive number!' })
+    });
+
+    try {
+        await newCourse.save();
+        res.status(201).json({ message: "Course created successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to create course. Please try again later." });
     }
-    if (!CourseName || !CourseCode || !Description || !Instructor || !Price || !Image || !Duration || !VideoLink) {
-        return res.status(400).json({ message: 'All fields are required!' })
-    }
+};
 
-    newCourse.save().then(() => {
-        res.json("Course made successfully")
-    }).catch((err) => {
-        console.log(err);
-    })
-
-}
-
-//view all courses by userId
+// View all courses by userId
 const getAllCoursesByUserId = async (req, res) => {
     const UserId = req.params.id;
 
@@ -40,25 +42,28 @@ const getAllCoursesByUserId = async (req, res) => {
         const courses = await Course.find({ UserId: UserId });
         res.json(courses);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
 
-//view all courses
+// View all courses
 const getAllCourses = async (req, res) => {
-    try{
+    try {
         const courses = await Course.find();
         res.json(courses);
-    }catch(error){
-        res.status(500).json({error: "Internal Server Error"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
 
-//update a course by id
+// Update a course by id
 const updateCourse = async (req, res) => {
-    let courseId = req.params.id;
+    const courseId = req.params.id;
     const { CourseName, CourseCode, Description, Instructor, Price, Duration, VideoLink } = req.body;
+
+    // Validate input fields if necessary
 
     const updateCourse = {
         CourseName,
@@ -68,59 +73,62 @@ const updateCourse = async (req, res) => {
         Price,
         Duration,
         VideoLink
+    };
+
+    try {
+        await Course.findByIdAndUpdate(courseId, updateCourse);
+        res.status(200).send({ message: "Course successfully updated!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Course update unsuccessful. Please try again later." });
     }
+};
 
-    const update = await Course.findByIdAndUpdate(courseId, updateCourse).then(() => {
-        res.status(200).send({ status: "Course successfully updated!" })
-    }).catch((error) => {
-        console.log(error);
-        res.status(500).send({ status: "Course update unsuccessful, please try again...", error: error.message });
-    })
-}
-
-//delete course by id
+// Delete course by id
 const deleteCourse = async (req, res) => {
+    const courseId = req.params.id;
 
-    let courseId = req.params.id;
+    try {
+        await Course.findByIdAndDelete(courseId);
+        res.status(200).send({ message: "Course deleted!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Course deletion unsuccessful. Please try again later." });
+    }
+};
 
-    await Course.findByIdAndDelete(courseId).then(() => {
-        res.status(200).send({ status: "Course deleted!" });
-    }).catch((error) => {
-        console.log(error);
-        res.status(500).send({ status: "Course deletion unsuccessful!", error: error.message });
-    })
-}
-
-//view one specific course by id
+// View one specific course by id
 const viewOneCourseById = async (req, res) => {
-    let courseId = req.params.id;
+    const courseId = req.params.id;
 
-    const course = await Course.findById(courseId).then((course) => {
-        res.status(200).send({ course });
-    }).catch((error) => {
-        console.log(error);
-        res.status(500).send({ status: "Error with fetching the course!", error: error.message });
-    })
-}
+    try {
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).send({ message: "Course not found!" });
+        }
+        res.status(200).json(course);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Error fetching the course. Please try again later." });
+    }
+};
 
-//search course
-const searchCourse =
-    async (req, resp) => {
+// Search course
+const searchCourse = async (req, res) => {
+    const searchKey = req.params.key;
+    try {
         let result = await Course.find({
             "$or": [
-                {
-                    CourseName: { $regex: req.params.key }
-                },
-                {
-                    CourseName: { $regex: req.params.key }
-                },
-                {
-                    Instructor: { $regex: req.params.key }
-                }
+                { CourseName: { $regex: searchKey, $options: 'i' } },
+                { Instructor: { $regex: searchKey, $options: 'i' } }
             ]
         });
-        resp.send(result);
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error searching for courses. Please try again later." });
     }
+};
 
 module.exports = {
     createCourse,
