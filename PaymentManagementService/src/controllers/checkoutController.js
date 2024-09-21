@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_51PDNzJEaSJ1mlAjv1zaGF4uGLyEflJ9EgCGtk1n3y0OAuCtl1ghc5i8V7hlld5k0nCUc74eTAYCLneLZQpuTyi6800uzPy4mvt');
+const stripe = require('stripe')(process.env.SECRET_KEY);
 const authenticateRole = require('../middleware/authenticateRole');
 
 const createCheckoutSession = async (req, res) => {
