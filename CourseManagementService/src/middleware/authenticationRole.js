@@ -134,12 +134,13 @@ const authenticateinstructorAndStudentRole = async (req, res, next) => {
 
         // Check if authentication was successful
         if (response.status === 200 && response.data.message === "Instructor and Student access granted") {
+            console.log("granted")
             next();
         } else {
             res.status(403).json({ message: "Access denied, user does not have roles matching INSTRUCTOR and STUDENT" });
         }
     } catch (error) {
-        console.error("Error authenticating user role:", error);
+        // console.error("Error authenticating user role:", error);
         res.status(500).json({ message: "Access denied, user does not have roles matching INSTRUCTOR and STUDENT" });
     }
 };

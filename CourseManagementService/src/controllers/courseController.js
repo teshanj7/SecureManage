@@ -100,13 +100,14 @@ const deleteCourse = async (req, res) => {
 // View one specific course by id
 const viewOneCourseById = async (req, res) => {
     const courseId = req.params.id;
-
+    console.log(courseId);
     try {
         const course = await Course.findById(courseId);
+        console.log(course);
         if (!course) {
             return res.status(404).send({ message: "Course not found!" });
         }
-        res.status(200).json(course);
+        res.status(200).json({ course });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Error fetching the course. Please try again later." });
