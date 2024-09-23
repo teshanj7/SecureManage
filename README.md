@@ -12,8 +12,8 @@ This website is included as a website where students can gain knowledge through 
 </ul>
 </p>
 
-<p>Github link to the Original Project : https://github.com/janchilling/DS-Microservices-Project.git </p>
-<p>Github link to the Modified Project : https://github.com/teshanj7/SecureManage.git </p>  
+<p>Github link to the Original Project : https://github.com/janchilling/DS-Microservices-Project </p>
+<p>Github link to the Modified Project : https://github.com/teshanj7/SecureManage </p>  
 <p>Contribution Video Link : https://www.youtube.com/watch?v=irYGMlJKooo </p>
 
 <h2>Contributors & Contribution</h2>
