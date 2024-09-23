@@ -34,7 +34,7 @@ app.use(
   })
 ) // use a csp policy for this express app
 
-// Define your Content Security Policy
+// Define Content Security Policy
 const cspOptions = {
     directives: {
       defaultSrc: ["'self'", "'trusted-default.com'"],  
