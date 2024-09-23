@@ -3,6 +3,10 @@ const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
 const { createPayment, getAllPayments} = require('../controllers/paymentController');
+const { 
+    authenticateadminRole,
+    authenticateStudentRole
+} = require('../middleware/authenticateRole');
 
 // Configure csp headers
 router.use(helmet.contentSecurityPolicy({
@@ -21,9 +25,9 @@ router.use(helmet.contentSecurityPolicy({
 // X-Content-Type-Options Header
 router.use(helmet.xContentTypeOptions());
 
-router.post('', createPayment);
+router.post('', authenticateStudentRole, createPayment);
 
 // Get All Payments
-router.get("/getAllPayments", getAllPayments);
+router.get("/getAllPayments", authenticateadminRole, getAllPayments);
 
 module.exports = router;

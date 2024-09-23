@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
 const { createCheckoutSession } = require('../controllers/checkoutController');
+const { authenticateStudentRole } = require('../middleware/authenticateRole');
 
 // Configure csp headers
 router.use(helmet.contentSecurityPolicy({
@@ -21,6 +22,6 @@ router.use(helmet.contentSecurityPolicy({
 // X-Content-Type-Options Header
 router.use(helmet.xContentTypeOptions());
 
-router.post('/create-checkout-session', createCheckoutSession);
+router.post('/create-checkout-session', authenticateStudentRole, createCheckoutSession);
 
 module.exports = router;

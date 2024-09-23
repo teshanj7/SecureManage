@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 
 const isAdmin = (req, res, next) => {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization.split(" ")[1];
+    token = token.replace(/"/g, '');
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Your_Secret_Token");
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         if (decodedToken.type === 'admin') {
             next();
         } else {
@@ -16,10 +16,10 @@ const isAdmin = (req, res, next) => {
 };
 
 const isAdminORInstructor = (req, res, next) => {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization.split(" ")[1];
+    token = token.replace(/"/g, '');
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Your_Secret_Token");
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         if (decodedToken.type === 'admin' || decodedToken.type === 'instructor') {
             next();
         } else {
@@ -31,10 +31,10 @@ const isAdminORInstructor = (req, res, next) => {
 };
 
 const isAdminORStudent = (req, res, next) => {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization.split(" ")[1];
+    token = token.replace(/"/g, '');
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Your_Secret_Token");
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         if (decodedToken.type === 'admin' || decodedToken.type === 'student') {
             next();
         } else {
@@ -46,10 +46,10 @@ const isAdminORStudent = (req, res, next) => {
 };
   
 const isInstructor = (req, res, next) => {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization.split(" ")[1];
+    token = token.replace(/"/g, '');
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Your_Secret_Token");
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         if (decodedToken.type === 'instructor') {
             next();
         } else {
@@ -61,25 +61,29 @@ const isInstructor = (req, res, next) => {
 };
 
 const isInstructorORStudent = (req, res, next) => {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization.split(" ")[1];
+    token = token.replace(/"/g, '');
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Your_Secret_Token");
+        console.log(token)
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Hi2")
         if (decodedToken.type === 'instructor' || decodedToken.type === 'student') {
+            console.log("Hi3")
             next();
         } else {
             res.status(403).json({ message: "Access denied, not an instructor or student" });
         }
     } catch (error) {
+        console.log(error)
         res.status(401).json({ message: "Auth failed!" });
     }
 };
   
 const isStudent = (req, res, next) => {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization.split(" ")[1];
+    token = token.replace(/"/g, '');
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Your_Secret_Token");
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         if (decodedToken.type === 'student') {
             next();
         } else {

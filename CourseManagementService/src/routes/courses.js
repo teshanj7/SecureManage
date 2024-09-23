@@ -53,7 +53,7 @@ router.put("/updateCourse/:id", updateCourse);
 router.delete("/deleteCourse/:id", deleteCourse);
 
 //view one specific course by id
-router.get("/getCourse/:id", viewOneCourseById);
+router.get("/getCourse/:id", authenticateinstructorAndStudentRole, viewOneCourseById);
 
 //search course
 router.get("/searchCourse/:key", searchCourse);
