@@ -1,10 +1,7 @@
 const router = require("express").Router();
 const helmet = require('helmet');
 
-const { authenticateadminRole,
-        authenticateadminAndInstructorRole,
-        authenticateadminAndStudentRole,
-        authenticatestudentRole,
+const { authenticateadminAndInstructorRole,
         authenticateinstructorRole,
         authenticateinstructorAndStudentRole
 } = require('../middleware/authenticationRole');
