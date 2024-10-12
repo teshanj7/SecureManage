@@ -1,10 +1,7 @@
 const router = require("express").Router();
 const helmet = require('helmet');
 
-const { authenticateadminRole,
-        authenticateadminAndInstructorRole,
-        authenticateadminAndStudentRole,
-        authenticatestudentRole,
+const { authenticateadminAndInstructorRole,
         authenticateinstructorRole,
         authenticateinstructorAndStudentRole
 } = require('../middleware/authenticationRole');
@@ -38,7 +35,7 @@ router.use(helmet.xContentTypeOptions());
  
 
 //create new course
-router.post("/addCourse", createCourse);
+router.post("/addCourse", authenticateinstructorRole, createCourse);
 
 //view all courses by user id
 router.get("/getAllCourses/:id", getAllCoursesByUserId);
@@ -47,10 +44,10 @@ router.get("/getAllCourses/:id", getAllCoursesByUserId);
 router.get("/publishedCourses", getAllCourses);
 
 //update a course by id
-router.put("/updateCourse/:id", updateCourse);
+router.put("/updateCourse/:id", authenticateadminAndInstructorRole, updateCourse);
 
 //delete course by id
-router.delete("/deleteCourse/:id", deleteCourse);
+router.delete("/deleteCourse/:id", authenticateadminAndInstructorRole, deleteCourse);
 
 //view one specific course by id
 router.get("/getCourse/:id", authenticateinstructorAndStudentRole, viewOneCourseById);

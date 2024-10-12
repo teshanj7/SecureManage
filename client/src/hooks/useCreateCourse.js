@@ -6,6 +6,11 @@ import firebaseConfig from "../config/firebase";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app); // Initialize storage with the Firebase app
+const token = localStorage.getItem("token");
+const headers = {
+    "Authorization": `Bearer ${token}`
+};
+
 
 const useCreateCourse = () => {
     const createCourse = async (
@@ -42,6 +47,9 @@ const useCreateCourse = () => {
                     Image: imageUrl,
                     Duration,
                     VideoLink
+                }, 
+                {
+                    headers
                 }
             );
 

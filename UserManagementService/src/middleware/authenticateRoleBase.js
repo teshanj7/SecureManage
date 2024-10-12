@@ -49,6 +49,7 @@ const isInstructor = (req, res, next) => {
     let token = req.headers.authorization.split(" ")[1];
     token = token.replace(/"/g, '');
     try {
+        console.log("Hekkki");
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         if (decodedToken.type === 'instructor') {
             next();
@@ -64,17 +65,13 @@ const isInstructorORStudent = (req, res, next) => {
     let token = req.headers.authorization.split(" ")[1];
     token = token.replace(/"/g, '');
     try {
-        console.log(token)
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Hi2")
         if (decodedToken.type === 'instructor' || decodedToken.type === 'student') {
-            console.log("Hi3")
             next();
         } else {
             res.status(403).json({ message: "Access denied, not an instructor or student" });
         }
     } catch (error) {
-        console.log(error)
         res.status(401).json({ message: "Auth failed!" });
     }
 };

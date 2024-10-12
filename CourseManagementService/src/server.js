@@ -53,7 +53,7 @@ const cspOptions = {
    
 app.use(helmet.contentSecurityPolicy(cspOptions));
    
-
+// Anti-Clickjacking header missing
 // Set X-Frame option header to DENY
 app.use((req, res, next) => {
     res.setHeader('X-Frame-Options','DENY');
