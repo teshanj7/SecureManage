@@ -15,12 +15,24 @@ export default function UpdateCourse() {
 
     const params = useParams();
 
+    // Fetch token from localStorage
+    const token = localStorage.getItem("token");
+
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+
     useEffect(() => {
         getCourseDetails();
     }, [])
 
     const getCourseDetails = async () => {
-        let result = await fetch(`http://localhost:8800/CourseManagementService/course/getCourse/${params.id}`);
+        let result = await fetch(`http://localhost:8800/CourseManagementService/course/getCourse/${params.id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         result = await result.json();
 
         setCourseName(result.course.CourseName);
@@ -37,9 +49,7 @@ export default function UpdateCourse() {
         let result = await fetch(`http://localhost:8800/CourseManagementService/course/updateCourse/${params.id}`, {
             method: 'Put',
             body: JSON.stringify({ CourseName, CourseCode, Description, Instructor, Price, Duration, Image, VideoLink }),
-            headers: {
-                'Content-Type': 'Application/json'
-            }
+            headers: headers
         });
         console.log(result);
         result = await result.json();

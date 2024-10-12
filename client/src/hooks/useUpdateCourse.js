@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+const token = localStorage.getItem("token");
+const headers = {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+};
+
 const useUpdateCourse = () => {
     const [isUpdated, setIsUpdated] = useState(false);
 
@@ -8,9 +14,7 @@ const useUpdateCourse = () => {
             const response = await fetch(`http://localhost:8800/CourseManagementService/course/updateCourse/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers 
             });
             const data = await response.json();
             if (data) {
