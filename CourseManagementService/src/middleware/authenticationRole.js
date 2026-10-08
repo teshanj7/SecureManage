@@ -145,7 +145,33 @@ const authenticateinstructorAndStudentRole = async (req, res, next) => {
     }
 };
 
+const authenticateanyRole = async (req, res, next) => {
+    try {
+        // Extract token from request headers
+        const token = req.headers.authorization.split(" ")[1];
+        const headers = { Authorization: `Bearer ${token}` };
+
+        // Allow instructors and students, otherwise fall back to checking for admin
+        const roleChecks = ['instructorAndStudent', 'admin'];
+        for (const role of roleChecks) {
+            try {
+                const response = await axios.get(`http://localhost:3001/authenticate-role/${role}`, { headers });
+                if (response.status === 200) {
+                    return next();
+                }
+            } catch (error) {
+                // Role check rejected, try the next one
+            }
+        }
+
+        res.status(403).json({ message: "Access denied, user does not have roles matching ADMIN, INSTRUCTOR or STUDENT" });
+    } catch (error) {
+        res.status(500).json({ message: "Access denied, user does not have roles matching ADMIN, INSTRUCTOR or STUDENT" });
+    }
+};
+
 module.exports = {
+    authenticateanyRole,
     authenticateadminRole,
     authenticateadminAndInstructorRole,
     authenticateadminAndStudentRole,

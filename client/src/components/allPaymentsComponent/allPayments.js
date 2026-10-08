@@ -70,7 +70,11 @@ const AllPayments = () => {
         });
   
         const courseRequests = payments.map(async (payment) => {
-          const courseResponse = await axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${payment.CourseId}`);
+          const courseResponse = await axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${payment.CourseId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
           return { courseId: payment.CourseId, data: courseResponse.data.course };
         });
   

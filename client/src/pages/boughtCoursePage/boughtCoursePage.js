@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../../ContextComponent/ContextComponent";
 import VideoComponent from "../../components/videoComponent/VideoPlayer";
 import "../boughtCoursePage/boughtCoursePage.css";
 
 const BoughtCoursePage = () => {
     const [data, setData] = useState([]);
     const { id } = useParams();
+    const { token } = useContext(UserContext);
     const [videoUrl, setVideoUrl] = useState(''); // YouTube video URL
 
     useEffect(() => {
         function fetchCourse(){
-            axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${id}`).then((res) => {
+            axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((res) => {
                 setData(res.data);
                 setVideoUrl(res.data.course.VideoLink); // Move setVideoUrl here
                 console.log(res.data);

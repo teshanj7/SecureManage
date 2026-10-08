@@ -88,7 +88,11 @@ const AllEnrollments = () => {
 
       const courseRequests = enrollments.map(async (row) => {
         try {
-          const response = await axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${row.courseId}`);
+          const response = await axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${row.courseId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
           return { courseId: row.courseId, data: response.data.course };
         } catch (error) {
           console.error('Error fetching course data:', error);
