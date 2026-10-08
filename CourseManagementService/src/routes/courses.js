@@ -3,7 +3,8 @@ const helmet = require('helmet');
 
 const { authenticateadminAndInstructorRole,
         authenticateinstructorRole,
-        authenticateinstructorAndStudentRole
+        authenticateinstructorAndStudentRole,
+        authenticateanyRole
 } = require('../middleware/authenticationRole');
 
 const {
@@ -50,7 +51,7 @@ router.put("/updateCourse/:id", authenticateadminAndInstructorRole, updateCourse
 router.delete("/deleteCourse/:id", authenticateadminAndInstructorRole, deleteCourse);
 
 //view one specific course by id
-router.get("/getCourse/:id", authenticateinstructorAndStudentRole, viewOneCourseById);
+router.get("/getCourse/:id", authenticateanyRole, viewOneCourseById);
 
 //search course
 router.get("/searchCourse/:key", searchCourse);

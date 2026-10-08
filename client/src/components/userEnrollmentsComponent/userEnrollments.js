@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../../ContextComponent/ContextComponent';
 
 const UserEnrollments = () => {
-    const { user } = useContext(UserContext); 
+    const { user, token } = useContext(UserContext);
     const [enrollments, setEnrollments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -33,7 +33,9 @@ const UserEnrollments = () => {
             
             const courseIds = enrollments.map(enrollment => enrollment.courseId);
             const promises = courseIds.map(courseId =>
-                axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${courseId}`)
+                axios.get(`http://localhost:8800/CourseManagementService/course/getCourse/${courseId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
             );
             console.log("enrollments",enrollments);
             const responses = await Promise.all(promises);
@@ -53,11 +55,6 @@ const UserEnrollments = () => {
     
     const renderEnrollments = () => {
         return enrollments.map((enrollment, index) => {
-            const course = enrolledCourses[index];
-            console.log("EC:", enrolledCourses[index]); // Get the corresponding course
-            console.log("Course:", course);
-            if (!course) return null; // Check if course is not defined, return null
-    
             return (
                 <div key={index} className="w-1/5 p-4">
                     <div className="bg-white border border-gray-300 rounded-lg shadow-lg p-6">
